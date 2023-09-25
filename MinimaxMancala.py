@@ -32,7 +32,7 @@ def minimax(board, player, depth, max_depth = 7):
         return value
 
 
-def minimax_alphabeta(board, player, depth,  alpha=-np.inf, beta=np.inf, max_depth=10):
+def minimax_alphabeta(board, player, depth,  alpha=-np.inf, beta=np.inf, max_depth=5):
 
     if check_terminal(board) or depth == max_depth:
         return utility(board)

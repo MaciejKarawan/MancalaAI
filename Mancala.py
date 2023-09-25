@@ -36,7 +36,7 @@ def move_stones(board, x, player):
         if last_hole < 6:
             if work_board[last_hole] == 1:
 
-                work_board[6] = work_board[last_hole] + work_board[-(last_hole + 1)]
+                work_board[6] += work_board[last_hole] + work_board[-(last_hole + 1)]
                 work_board[last_hole] = 0
                 work_board[-(last_hole + 1)] = 0
 
@@ -58,7 +58,7 @@ def move_stones(board, x, player):
         if last_hole > 5 and last_hole < 12:
             if work_board[last_hole] == 1:
 
-                work_board[12] = work_board[last_hole] + work_board[-(last_hole + 2)]
+                work_board[12] += work_board[last_hole] + work_board[-(last_hole + 2)]
                 work_board[last_hole] = 0
                 work_board[-(last_hole + 2)] = 0
 

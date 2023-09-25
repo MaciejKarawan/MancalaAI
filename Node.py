@@ -1,6 +1,7 @@
 from Mancala import *
 from math import log, sqrt
 
+
 class Node:
     def __init__(self, board, player, parent):
         self.board = board
@@ -37,11 +38,11 @@ class Node:
         self.childs.append(child_node)
         self.update_unvisited_moves(move)
 
-
     def get_uct(self):
         c = sqrt(2)
         uct = self.wins/self.visits + c * sqrt(log(self.parent.visits)/self.visits)
-        return  uct
+        return uct
+
     def full_expanded(self):
         if self.get_unvisited_moves() == []:
             return True
@@ -52,6 +53,12 @@ class Node:
         self.visits += 1
         self.wins += result
 
+    def board_child(self, board):
+        for child in self.get_childs():
+            if np.array_equal(child.get_board(), board):
+                return child
+
+        return None
 
 
 

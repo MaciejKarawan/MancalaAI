@@ -20,6 +20,7 @@ class MCTS:
 
         return current_node
 
+
     def expand(self, node):
         unvisited = node.get_unvisited_moves()
         move = choice(unvisited)
@@ -63,14 +64,17 @@ class MCTS:
             node = node.parent
 
 
-
-
     def get_move(self):
         start = timer()
 
         while timer() - start < self.time:
             leaf = self.traverse()
-            new_leaf = self.expand(leaf)
+
+            if check_terminal(leaf.get_board()) is not True:
+                new_leaf = self.expand(leaf)
+            else:
+                new_leaf = leaf
+
             result = self.simulation(new_leaf)
             self.backpropagate(new_leaf, result)
 
