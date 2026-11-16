@@ -1,13 +1,43 @@
-# MancalaAI
+# Mancala AI: Minimax vs. Monte Carlo Tree Search
 
-Install Python 3.11+ and `python -m pip install -e .`. From the repository root run `python -m scripts.game`. Commands execute experiments or launch the application; importing the model package is separate.
+**Game engine for Kalah-style Mancala with two AI agents, a depth-limited minimax with alpha-beta pruning and a UCT Monte Carlo Tree Search, played against each other.**
 
-See [layout](docs/layout.md) and [file migration](docs/file-migration.json). Source implementations, author attribution in supplied reports and distinct historical variants are retained. New figure/table outputs are routed to results/generated. Dependency declarations describe imports, not a reconstruction of the original historical environment. No new licence is assigned.
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?logo=numpy)
+![Topic](https://img.shields.io/badge/topic-game%20AI%20%7C%20search-blueviolet)
 
-## Current limitations
+## Game
 
-Gameplay and agent logic are intentionally unchanged, including the previously identified action-13 and MCTS move-mapping issues. Simulations should not be treated as validated comparisons of agents. This task only reorganizes files and prevents games from starting merely on import.
+- 14-position board stored as a NumPy array: 6 pits per player plus two stores, with 4 stones per pit (48 in total)
+- Sowing counter-clockwise, skipping the opponent's store
+- **Extra move** when the last stone lands in your own store
+- **Capture** when the last stone lands in an empty pit on your side: you take it and the stones opposite
 
-## Checks
+## Agents
 
-`python -m unittest discover -s tests -v` runs migration checks. Full financial experiments, agent tournaments and GUI sessions were not rerun.
+| Agent | Idea |
+|---|---|
+| **Minimax** | Exhaustive search to a fixed depth, with the store difference as the utility. Extra moves keep the same player at the same depth |
+| **Minimax + alpha-beta** | The same search with alpha-beta pruning (default depth 5), so it can look deeper for the same cost |
+| **MCTS (UCT)** | Selection with UCB1 (c = √2), expansion, random playouts and backpropagation within a per-move time budget. The most-visited child is played |
+| **MCTS variant** | Keeps and re-roots the search tree between moves instead of rebuilding it each turn |
+| Random | Baseline |
+
+## Repository structure
+
+```
+src/mancala_ai/   rules.py (board, sowing, captures, terminal state, utility),
+                  minimax.py, mcts.py, mcts_variant.py, node.py (UCT tree node)
+scripts/          game (alpha-beta vs. MCTS), game1 (alpha-beta vs. tree-reusing MCTS)
+```
+
+## How to run
+
+```bash
+python -m pip install -e .
+python -m scripts.game
+```
+
+Smoke tests (imports, initial board): `python -m unittest discover -s tests`.
+
+> **Note:** the agents are exploratory implementations. Agent-vs-agent results should not be read as a validated comparison, because move indexing between the MCTS tree and the board still has a known inconsistency.
